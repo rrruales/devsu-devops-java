@@ -18,7 +18,7 @@ jobs:
         java-version: '17'
         cache: 'maven'
     - name: Build Project
-      run: mvn clean install -DskipTests
+      run: mvn clean install
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v2.3.0
       env:
