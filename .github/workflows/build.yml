@@ -38,3 +38,18 @@ jobs:
         cache: 'maven'
     - name: Run Tests
       run: mvn test
+    
+  sonarcloud:    
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2.3.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.organization=rolo
+          
