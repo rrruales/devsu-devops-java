@@ -6,7 +6,7 @@ USER tmpusr
 RUN mkdir -p /home/tmpusr/app
 WORKDIR /home/tmpusr/app
 
-COPY --chown=tmpusr:tmpusrgp target/*.jar .
+COPY --chown=tmpusr:tmpusrgp *.jar .
 
 EXPOSE 8000
 ENTRYPOINT [ "java" ]
