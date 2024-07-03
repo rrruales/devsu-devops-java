@@ -53,4 +53,4 @@ jobs:
       with:
         args: >
           -Dsonar.organization=rolo
-          -Dsonar.projectKey=devsu-devops-java       
+          -Dsonar.projectKey=rrruales_devsu-devops-java       
