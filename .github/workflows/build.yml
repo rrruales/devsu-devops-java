@@ -17,14 +17,19 @@ jobs:
         distribution: 'oracle'
         java-version: '17'
         cache: 'maven'
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -DskipTests
+    - name: Build Project
+      run: mvn clean install -DskipTests
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2.3.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Build File
         path: target/*.jar
-
+  
   unit_tests:
     runs-on: ubuntu-latest
     needs: build
@@ -38,19 +43,3 @@ jobs:
         cache: 'maven'
     - name: Run Tests
       run: mvn test
-    
-  sonarcloud:    
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2.3.0
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      with:
-        args: >
-          -Dsonar.organization=rolo
-          -Dsonar.projectKey=rrruales_devsu-devops-java       
