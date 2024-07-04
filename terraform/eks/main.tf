@@ -1,4 +1,4 @@
-############################### EKS ############################################
+############################### EKS #############################################
 module "eks" {
   source = "../modules/eks"
 
@@ -6,7 +6,7 @@ module "eks" {
   cluster_version                 = var.cluster_version
   cluster_enabled_log_types       = var.cluster_enabled_log_types
   cluster_security_groups         = var.cluster_security_groups
-  cluster_subnet_ids              = concat(data.terraform_remote_state.vpc.outputs.subnet_ids_dev, data.terraform_remote_state.vpc.outputs.subnet_ids_qa)
+  cluster_subnet_ids              = [data.terraform_remote_state.vpc.outputs.subnet_ids["Public A"], data.terraform_remote_state.vpc.outputs.subnet_ids["Public B"]]
   cluster_endpoint_private_access = var.cluster_endpoint_private_access
   cluster_endpoint_public_access  = var.cluster_endpoint_public_access
   cluster_public_access_cidrs     = var.cluster_public_access_cidrs
