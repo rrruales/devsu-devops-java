@@ -1,6 +1,6 @@
 ################# VPC INTERNET #################
 module "vpc_internet" {
-  source = "..modules/vpc_internet"
+  source = "../modules/vpc_internet"
 
   networks       = var.networks
   subnets        = var.subnets
