@@ -33,3 +33,9 @@ subnets = {
 }
 
 name_rt_public = "rt-public-devsu"
+
+tags = {
+  ManagedBy = "Terraform"
+  Account   = "Devsu"
+  Owner     = "Devsu"
+}
