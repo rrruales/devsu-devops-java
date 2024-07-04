@@ -1,14 +1,14 @@
 terraform {
   required_providers {
     aws = {
-        source = "hashicorpo/aws"
-        version = "~> 5.36.0"
+      source  = "hashicorpo/aws"
+      version = "~> 5.36.0"
     }
   }
 
   backend "s3" {
-    bucket = "devsu"
-    key = "vpc/terraform.tfstate"
+    bucket = "devsu-devops-java"
+    key    = "vpc/terraform.tfstate"
     region = "us-east-1"
   }
 
