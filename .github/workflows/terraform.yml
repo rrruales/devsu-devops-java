@@ -79,6 +79,8 @@ jobs:
         with:
           name: Planfile
           path: terraform/${{ env.DIRECTORY }}/planfile
+    outputs:
+      directory: ${{ steps.check_title.outputs.DIRECTORY }}
 
   terraform_apply:
     name: Apply
@@ -100,13 +102,17 @@ jobs:
           terraform_version: 1.6.6
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          cd ${{ needs.terraform_plan.outputs.directory }}
+          terraform init
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: Planfile
-          path: terraform/
+          path: terraform/${{ needs.terraform_plan.outputs.directory }}
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform apply -input=false -compact-warnings planfile
+        run: |
+          cd ${{ needs.terraform_plan.outputs.directory }}
+          terraform apply -input=false -compact-warnings planfile
