@@ -59,7 +59,7 @@ jobs:
         if: github.event_name == 'pull_request' && env.RUN_JOB == 'false'
         run: terraform plan -input=false -compact-warnings -var="environment=dev" -out=planfile
       - name: Terraform Plan Destroy
-        id: plan
+        id: destroy
         if: github.event_name == 'pull_request' && env.RUN_JOB == 'true'
         run: terraform plan -input=false -compact-warnings -var="environment=dev" -destroy -out=planfile
       - name: Upload Artifact
