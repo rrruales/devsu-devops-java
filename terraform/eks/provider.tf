@@ -19,7 +19,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-########################## REMOTE STATES ######################################
+########################## REMOTE STATES #######################################
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
