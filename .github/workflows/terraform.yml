@@ -82,7 +82,7 @@ jobs:
     outputs:
       directory: ${{ steps.check_title.outputs.DIRECTORY }}
 
-      
+
   terraform_apply:
     name: Apply
     runs-on: ubuntu-latest
@@ -104,6 +104,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
+          echo ${{ needs.terraform_plan.outputs.directory }}
           cd ${{ needs.terraform_plan.outputs.directory }}
           terraform init
       - name: Download Artifact
@@ -111,8 +112,8 @@ jobs:
         with:
           name: Planfile
           path: terraform/${{ needs.terraform_plan.outputs.directory }}
-      - name: Terraform Plan
-        id: plan
+      - name: Terraform apply
+        id: apply
         if: github.event_name == 'pull_request'
         run: |
           cd ${{ needs.terraform_plan.outputs.directory }}
