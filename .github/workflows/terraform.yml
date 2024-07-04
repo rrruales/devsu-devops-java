@@ -54,23 +54,31 @@ jobs:
         continue-on-error: true
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform init
       - name: Terraform Validate
         id: validate
-        run: terraform validate
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform validate
       - name: Terraform Plan Create
         id: plan
         if: github.event_name == 'pull_request' && env.RUN_JOB == 'false'
-        run: terraform plan -input=false -compact-warnings -var="environment=dev" -out=planfile
+        run: | 
+          cd ${{ env.DIRECTORY }}
+          terraform plan -input=false -compact-warnings -var="environment=dev" -out=planfile
       - name: Terraform Plan Destroy
         id: destroy
         if: github.event_name == 'pull_request' && env.RUN_JOB == 'true'
-        run: terraform plan -input=false -compact-warnings -var="environment=dev" -destroy -out=planfile
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform plan -input=false -compact-warnings -var="environment=dev" -destroy -out=planfile
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Planfile
-          path: terraform/planfile
+          path: terraform/${{ env.DIRECTORY }}/planfile
 
   terraform_apply:
     name: Apply
