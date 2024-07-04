@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devsu-deploy
+  namespace: devsu
+  labels:
+    app: devsu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devsu
+  template:
+    metadata:
+      labels:
+        app: devsu
+    spec:
+      volumes:
+        - name: devsu-secret
+          secret:
+            secretName: devsu-secret
+      containers:
+        - name: devsu-container
+          image: rolo96/devsu:4be672
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          envFrom:
+          - secretRef:
+              name: devsu-secret
+          livenessProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
