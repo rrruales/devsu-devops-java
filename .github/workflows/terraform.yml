@@ -43,7 +43,7 @@ jobs:
       - name: Check commit title for 'deploy'
         id: check_title
         run: |
-          if [[ ${{ github.event.pull_request.title }} == *"destroy"* ]]; then
+          if [[ "${{ github.event.pull_request.title }}" =~ destroy ]]; then
             echo "RUN_JOB=true" >> $GITHUB_ENV
           else
             echo "RUN_JOB=false" >> $GITHUB_ENV
