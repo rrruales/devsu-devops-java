@@ -69,6 +69,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Planfile
+          path: terraform/
       - name: Use Terraform 1.6.6 version
         uses: hashicorp/setup-terraform@v3
         with:
