@@ -27,7 +27,7 @@ module "eks" {
   ec2_ssh_key                     = var.ec2_ssh_key
   cluster_tags                    = var.cluster_tags
   node_tags                       = var.node_tags
-  tags                            = merge(
+  tags = merge(
     var.tags,
     { "Environment" = var.environment }
   )
