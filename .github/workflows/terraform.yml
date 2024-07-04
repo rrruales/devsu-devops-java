@@ -47,7 +47,9 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: |
+          pwd
           cd ${{ env.DIRECTORY }}
+          pwd
           terraform fmt -check
         continue-on-error: true
       - name: Terraform Init
