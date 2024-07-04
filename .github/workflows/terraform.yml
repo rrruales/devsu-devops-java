@@ -41,8 +41,10 @@ jobs:
           fi
           if [[ "${{ github.event.pull_request.title }}" =~ vpc ]]; then
             echo "DIRECTORY=vpc" >> $GITHUB_ENV
+            echo "DIRECTORY=vpc" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event.pull_request.title }}" =~ eks ]]; then
             echo "DIRECTORY=eks" >> $GITHUB_ENV
+            echo "DIRECTORY=eks" >> $GITHUB_OUTPUT
           fi     
       - name: Terraform Format
         id: fmt
