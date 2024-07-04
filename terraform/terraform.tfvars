@@ -24,7 +24,7 @@ subnets = {
     is_public         = false
   }
   "Public B" = {
-    cidr_block        = "10.0.0.192/24"
+    cidr_block        = "10.0.0.192/26"
     availability_zone = "us-east-1b"
     is_public         = true
     tag_eip           = { Name = "IP B Devsu" }
