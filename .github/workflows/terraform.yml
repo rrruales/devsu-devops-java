@@ -35,14 +35,25 @@ jobs:
         id: fmt
         run: terraform fmt -check
         continue-on-error: true
-      - name: Get last commit message
-        id: get_commit_message
-        run: |
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)"
+      - name: Obtener información del PR
+        id: obtener_info_pr
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: pr } = await github.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            return {
+              title: pr.title,
+              body: pr.body
+            };
       - name: Check commit title for 'deploy'
         id: check_title
         run: |
+          echo "Título del PR: ${{ steps.obtener_info_pr.outputs.title }}"
+          echo "Descripción del PR: ${{ steps.obtener_info_pr.outputs.body }}"
           if [[ "$COMMIT_MESSAGE" == *"destroy"* ]]; then
             echo "RUN_JOB=true" >> $GITHUB_ENV
           else
@@ -68,7 +79,6 @@ jobs:
           name: Planfile
           path: terraform/planfile
 
-          
   terraform_apply:
     name: Apply
     runs-on: ubuntu-latest
