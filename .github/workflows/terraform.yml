@@ -35,16 +35,33 @@ jobs:
         id: fmt
         run: terraform fmt -check
         continue-on-error: true
+      - name: Get last commit message
+        id: get_commit_message
+        run: |
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)"
+      - name: Check commit title for 'deploy'
+        id: check_title
+        run: |
+          if [[ "$COMMIT_MESSAGE" == *"destroy"* ]]; then
+            echo "RUN_JOB=true" >> $GITHUB_ENV
+          else
+            echo "RUN_JOB=false" >> $GITHUB_ENV
+          fi
       - name: Terraform Init
         id: init
         run: terraform init
       - name: Terraform Validate
         id: validate
         run: terraform validate
-      - name: Terraform Plan
+      - name: Terraform Plan Create
         id: plan
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && env.RUN_JOB == 'false'
         run: terraform plan -input=false -compact-warnings -var="environment=dev" -out=planfile
+      - name: Terraform Plan Destroy
+        id: plan
+        if: github.event_name == 'pull_request' && env.RUN_JOB == 'true'
+        run: terraform plan -input=false -compact-warnings -var="environment=dev" -destroy -out=planfile
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
