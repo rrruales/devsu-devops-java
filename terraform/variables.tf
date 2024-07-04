@@ -19,3 +19,11 @@ variable "subnets" {
 variable "name_rt_public" {
   type = string
 }
+
+variable "environment" {
+  type = string
+}
+
+variable "tags" {
+  type = map(string)
+}
