@@ -68,6 +68,7 @@ jobs:
           name: Planfile
           path: terraform/planfile
 
+          
   terraform_apply:
     name: Apply
     runs-on: ubuntu-latest
