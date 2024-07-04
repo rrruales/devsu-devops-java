@@ -31,15 +31,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-      - name: Obtener información del PR
-        id: obtener_info_pr
-        run: |
-          echo "Título del PR: ${{ github.event.pull_request.title }}"
-          echo "Descripción del PR: ${{ github.event.pull_request.body }}"
       - name: Check commit title for 'deploy'
         id: check_title
         run: |
@@ -48,6 +39,17 @@ jobs:
           else
             echo "RUN_JOB=false" >> $GITHUB_ENV
           fi
+          if [[ "${{ github.event.pull_request.title }}" =~ vpc ]]; then
+            echo "DIRECTORY=vpc" >> $GITHUB_ENV
+          elif [[ "${{ github.event.pull_request.title }}" =~ eks ]]; then
+            echo "DIRECTORY=eks" >> $GITHUB_ENV
+          fi     
+      - name: Terraform Format
+        id: fmt
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform fmt -check
+        continue-on-error: true
       - name: Terraform Init
         id: init
         run: terraform init
