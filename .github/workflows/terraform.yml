@@ -84,7 +84,6 @@ jobs:
     outputs:
       directory: ${{ steps.check_title.outputs.DIRECTORY }}
 
-
   terraform_apply:
     name: Apply
     runs-on: ubuntu-latest
