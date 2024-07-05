@@ -8,7 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/subnets: subnet-0dba95be4bba5e3aa,subnet-0e3daf3bff3d5036c
     alb.ingress.kubernetes.io/tags: Environment=dev,Team=devsu
     alb.ingress.kubernetes.io/target-type: ip
-    external-dns.alpha.kubernetes.io/hostname: devops-devsu.com
+    external-dns.alpha.kubernetes.io/hostname: devops-devsu-prueba.online
 spec:
   ingressClassName: alb
   rules:
