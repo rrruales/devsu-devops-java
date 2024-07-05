@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devsu-configmap
+  namespace: devsu
+  labels:
+    app: devsu
+data:
+  PORT: 8000
+  USERNAME_DB: user
