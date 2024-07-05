@@ -21,7 +21,7 @@ spec:
             secretName: devsu-secret
       containers:
         - name: devsu-container
-          image: rolo96/devsu:4be672
+          image: rolo96/devsu:{{COMMIT}}
           ports:
             - name: http
               containerPort: 8000
