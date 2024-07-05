@@ -6,5 +6,5 @@ metadata:
   labels:
     app: devsu
 data:
-  PORT: 8000
+  PORT: "8000"
   USERNAME_DB: user
