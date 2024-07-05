@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devsu
+  namespace: devsu
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-0dba95be4bba5e3aa,subnet-0e3daf3bff3d5036c
+    alb.ingress.kubernetes.io/tags: Environment=dev,Team=devsu
+    alb.ingress.kubernetes.io/target-type: ip
+    external-dns.alpha.kubernetes.io/hostname: devops-devsu.com
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /api/users
+            pathType: Exact
+            backend:
+              service:
+                name: devsu-svc
+                port:
+                  number: 80
+          - path: /api/users
+            pathType: Prefix
+            backend:
+              service:
+                name: devsu-svc
+                port:
+                  number: 80
