@@ -1,0 +1,121 @@
+name: Terraform
+
+on:
+  pull_request:
+    branches: ["terraform"]
+  workflow_dispatch:
+    inputs:
+      run_apply:
+        description: "Run Terraform Apply"
+        required: true
+        default: "false"
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: "us-east-1"
+
+jobs:
+  terraform_plan:
+    name: Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Terraform 1.6.6 version
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+      - name: Check commit title for 'deploy'
+        id: check_title
+        run: |
+          if [[ "${{ github.event.pull_request.title }}" =~ destroy ]]; then
+            echo "RUN_JOB=true" >> $GITHUB_ENV
+          else
+            echo "RUN_JOB=false" >> $GITHUB_ENV
+          fi
+          if [[ "${{ github.event.pull_request.title }}" =~ vpc ]]; then
+            echo "DIRECTORY=vpc" >> $GITHUB_ENV
+            echo "DIRECTORY=vpc" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.pull_request.title }}" =~ eks ]]; then
+            echo "DIRECTORY=eks" >> $GITHUB_ENV
+            echo "DIRECTORY=eks" >> $GITHUB_OUTPUT
+          fi     
+      - name: Terraform Format
+        id: fmt
+        run: |
+          pwd
+          cd ${{ env.DIRECTORY }}
+          pwd
+          terraform fmt -check
+        continue-on-error: true
+      - name: Terraform Init
+        id: init
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform init
+      - name: Terraform Validate
+        id: validate
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform validate
+      - name: Terraform Plan Create
+        id: plan
+        if: github.event_name == 'pull_request' && env.RUN_JOB == 'false'
+        run: | 
+          cd ${{ env.DIRECTORY }}
+          terraform plan -input=false -compact-warnings -var="environment=dev" -out=planfile
+      - name: Terraform Plan Destroy
+        id: destroy
+        if: github.event_name == 'pull_request' && env.RUN_JOB == 'true'
+        run: |
+          cd ${{ env.DIRECTORY }}
+          terraform plan -input=false -compact-warnings -var="environment=dev" -destroy -out=planfile
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Planfile
+          path: terraform/${{ env.DIRECTORY }}/planfile
+    outputs:
+      directory: ${{ steps.check_title.outputs.DIRECTORY }}
+
+  terraform_apply:
+    name: Apply
+    runs-on: ubuntu-latest
+    environment: dev-manual
+    needs: terraform_plan
+    defaults:
+      run:
+        working-directory: terraform
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Terraform 1.6.6 version
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+      - name: Terraform Init
+        id: init
+        run: |
+          echo ${{ needs.terraform_plan.outputs.directory }}
+          cd ${{ needs.terraform_plan.outputs.directory }}
+          terraform init
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Planfile
+          path: terraform/${{ needs.terraform_plan.outputs.directory }}
+      - name: Terraform apply
+        id: apply
+        if: github.event_name == 'pull_request'
+        run: |
+          cd ${{ needs.terraform_plan.outputs.directory }}
+          terraform apply -input=false -compact-warnings planfile
