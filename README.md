@@ -29,6 +29,14 @@ Los jobs son los siguientes
     -   **terraform_plan:** Destinado para la ejecución de fmt, validate y plan
     -   **terraform_apply:** Destinado para la ejecución de apply
 
+#### SonarCloud
+
+![SonarCloud](./img/SonarCloud.png)
+
+#### Scan Vulnerabilities
+
+![ScanVulnerabilities](./img/ScanVulnerabilities.png)
+
 ### Terraform
 #### Módulos VPC y EKS
 - Se elabora módulo VPC el cual incluye:
