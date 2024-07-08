@@ -1,4 +1,4 @@
-# Proyecto ----
+# Proyecto devsu-devops-java
 
 ### Dependencia para exponer HealthCheck mediante un endpoint
 ~~~
@@ -60,7 +60,7 @@ Los jobs son los siguientes
     - **namespace.yml:** Creación del namespace en donde se van a agrupar los recursos siguientes.
     - **secrets.yml:** Creación de secretos cuyos valores sensibles estarán codificados en base64
     - **configmap.yml:** Creación de valores no sensibles
-    - **deployment.yml:** Manifiesto que despliega el microservicio, tiene implementado readinessprobe y livenessprobe
+    - **deployment.yml:** Manifiesto que despliega el microservicio, tiene implementado readinessprobe y livenessprobe. El limite de recursos tambien es incorporado para que HPA pueda funcionar.
     - **hpa.yml:** Manifiesto para autoescalado de microservicios dependiendo de umbrales basados en el consumo de CPU
     - **service.yml** Manifiesto para la exposicion desde el POD hacia el nodo worker
     - **ingress.yml** Manifiesto para la comunicacion entre el balanceador de aplicacion de AWS y el service creado anteriormente, esto nos permite automaticamente definir extrictamnete los endpoints que debeder ser consumidos en nuestro aplicativo y que microservicio va a recibir la peticion.
