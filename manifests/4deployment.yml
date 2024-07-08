@@ -24,8 +24,8 @@ spec:
           image: rolo96/devsu:{{COMMIT}}
           resources:
             limits:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 1000m
+              memory: 1024Mi
           ports:
             - name: http
               containerPort: 8000
