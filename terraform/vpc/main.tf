@@ -1,4 +1,4 @@
-################# VPC INTERNET #################
+################# VPC INTERNET ##################
 module "vpc_internet" {
   source = "../modules/vpc_internet"
 
